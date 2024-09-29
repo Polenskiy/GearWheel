@@ -21,10 +21,21 @@ final class OptionsContainerView: UIView {
         return stack
     }()
     
-    let toothCount = OptionsTextFieldView(text: "Enter the number of teeth")
-    let toothHeight = OptionsTextFieldView(text: "Enter the height of the tooth")
-    let toothRadius = OptionsTextFieldView(text: "Enter the tooth radius")
+    private let toothCount = OptionsTextFieldView(text: "Enter the number of teeth")
+    private let toothHeight = OptionsTextFieldView(text: "Enter the height of the tooth")
+    private let toothRadius = OptionsTextFieldView(text: "Enter the tooth radius")
 
+    var count: Int? {
+        Int(toothCount.text ?? "")
+    }
+
+    var heigh: Int? {
+        Int(toothHeight.text ?? "")
+    }
+    var radius: Int? {
+        Int(toothRadius.text ?? "")
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: .zero)
         setup()
@@ -61,3 +72,4 @@ private extension OptionsContainerView {
         verticalStackView.backgroundColor = .systemBlue
     }
 }
+

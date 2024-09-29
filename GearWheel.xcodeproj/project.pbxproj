@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A570332A2CA9E9F6001F840D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A57033292CA9E9F6001F840D /* LaunchScreen.storyboard */; };
 		A5CB53502C9DF0A10015FA9D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5CB534F2C9DF0A10015FA9D /* AppDelegate.swift */; };
 		A5CB53522C9DF0A10015FA9D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5CB53512C9DF0A10015FA9D /* SceneDelegate.swift */; };
 		A5CB53542C9DF0A10015FA9D /* GearViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5CB53532C9DF0A10015FA9D /* GearViewController.swift */; };
 		A5CB53592C9DF0A20015FA9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5CB53582C9DF0A20015FA9D /* Assets.xcassets */; };
-		A5CB535C2C9DF0A20015FA9D /* Base in Resources */ = {isa = PBXBuildFile; fileRef = A5CB535B2C9DF0A20015FA9D /* Base */; };
 		A5CB53642C9DF2AF0015FA9D /* GearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5CB53632C9DF2AF0015FA9D /* GearView.swift */; };
 		A5CB53662C9DF6480015FA9D /* OptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5CB53652C9DF6480015FA9D /* OptionsViewController.swift */; };
 		A5CB53682C9DFA7A0015FA9D /* OptionsContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5CB53672C9DFA7A0015FA9D /* OptionsContainerView.swift */; };
@@ -20,12 +20,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A57033292CA9E9F6001F840D /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A5CB534C2C9DF0A10015FA9D /* GearWheel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GearWheel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5CB534F2C9DF0A10015FA9D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A5CB53512C9DF0A10015FA9D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		A5CB53532C9DF0A10015FA9D /* GearViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearViewController.swift; sourceTree = "<group>"; };
 		A5CB53582C9DF0A20015FA9D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		A5CB535B2C9DF0A20015FA9D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A5CB535D2C9DF0A20015FA9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A5CB53632C9DF2AF0015FA9D /* GearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearView.swift; sourceTree = "<group>"; };
 		A5CB53652C9DF6480015FA9D /* OptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsViewController.swift; sourceTree = "<group>"; };
@@ -73,7 +73,7 @@
 				A5CB53512C9DF0A10015FA9D /* SceneDelegate.swift */,
 				A5CB534F2C9DF0A10015FA9D /* AppDelegate.swift */,
 				A5CB53582C9DF0A20015FA9D /* Assets.xcassets */,
-				A5CB535A2C9DF0A20015FA9D /* LaunchScreen.storyboard */,
+				A57033292CA9E9F6001F840D /* LaunchScreen.storyboard */,
 				A5CB535D2C9DF0A20015FA9D /* Info.plist */,
 			);
 			path = GearWheel;
@@ -137,8 +137,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A570332A2CA9E9F6001F840D /* LaunchScreen.storyboard in Resources */,
 				A5CB53592C9DF0A20015FA9D /* Assets.xcassets in Resources */,
-				A5CB535C2C9DF0A20015FA9D /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,17 +161,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		A5CB535A2C9DF0A20015FA9D /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A5CB535B2C9DF0A20015FA9D /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		A5CB535E2C9DF0A20015FA9D /* Debug */ = {

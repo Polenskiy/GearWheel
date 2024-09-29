@@ -15,53 +15,102 @@ class OptionsViewController: UIViewController {
         view.layer.cornerRadius = 30
         return view
     }()
-    
-    private let calculateButton: CalculateButton = {
+
+    private let errorLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .red
+        label.text = ""
+        label.numberOfLines = 0
+        label.font = .systemFont(ofSize: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private lazy var calculateButton: CalculateButton = {
         let button = CalculateButton(title: "Build a gear wheel")
         button.addTarget(self, action: #selector(calcualteButtonPressed), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
+
+    private var keyboardBottomConstraint: NSLayoutConstraint?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupInitialState()
+        handleKeiboard()
     }
 }
 
 private extension OptionsViewController {
-    
+    func handleKeiboard() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+
+        // Создаем UITapGestureRecognizer
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        // Не блокируем другие тапы (например, на кнопки)
+        tapGesture.cancelsTouchesInView = false
+        // Добавляем жест в view
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            UIView.animate(withDuration: 0.5) {
+                self.keyboardBottomConstraint?.constant = -(keyboardSize.height)
+            }
+        }
+    }
+
+    @objc func keyboardWillHide(notification: NSNotification) {
+        UIView.animate(withDuration: 0.5) {
+            self.keyboardBottomConstraint?.constant = self.view.safeAreaInsets.bottom - 64
+        }
+    }
+
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+
     func setupInitialState() {
         configureBackgroundView()
         configureInforamtionView()
-        configureView()
+        configureErrorLabelView()
         configureCalculateButton()
     }
     
     func configureInforamtionView() {
         view.addSubview(optionsView)
         NSLayoutConstraint.activate([
-            optionsView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            optionsView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -500),
-            optionsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            optionsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10)
+            optionsView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            optionsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            optionsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
     }
     
+    func configureErrorLabelView() {
+        view.addSubview(errorLabel)
+        NSLayoutConstraint.activate([
+            errorLabel.topAnchor.constraint(equalTo: optionsView.bottomAnchor, constant: 16),
+            errorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            errorLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+        ])
+    }
+
     func configureCalculateButton() {
         view.addSubview(calculateButton)
         NSLayoutConstraint.activate([
-            calculateButton.topAnchor.constraint(equalTo: optionsView.bottomAnchor, constant: 30),
-            calculateButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -350),
-            calculateButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 60),
-            calculateButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -60)
+            calculateButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            calculateButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            calculateButton.heightAnchor.constraint(equalToConstant: 60)
         ])
+
+        let bottomConstraint = calculateButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32)
+        bottomConstraint.isActive = true
+        keyboardBottomConstraint = bottomConstraint
     }
-    
-    func configureView() {
-        optionsView.backgroundColor = .systemCyan
-    }
-    
+
     func configureBackgroundView() {
         view.backgroundColor = .systemCyan
     }
@@ -69,23 +118,16 @@ private extension OptionsViewController {
     @objc func calcualteButtonPressed() {
         
         guard
-            let toothCountText = optionsView.toothCount.informationTextField.text,
-            let toothCount = Int(toothCountText),
-            let toothHeightText = optionsView.toothHeight.informationTextField.text,
-            let toothHeightValue = Double(toothHeightText),
-            let toothRadiusText = optionsView.toothRadius.informationTextField.text,
-            let toothRadiusValue = Double(toothRadiusText)
+            let toothCount = optionsView.count,
+            let toothHeight = optionsView.heigh,
+            let toothRadius = optionsView.radius
         else {
+            errorLabel.text = "Enter numeric value"
             return
         }
-        
-        let toothHeight = CGFloat(toothHeightValue)
-        let toothRadius = CGFloat(toothRadiusValue)
-        
+
         let viewController = GearViewController()
-        
         viewController.configureGear(with: toothCount, height: toothHeight, radius: toothRadius)
-        
         navigationController?.pushViewController(viewController, animated: true)
     }
 }

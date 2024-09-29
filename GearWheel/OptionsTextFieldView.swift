@@ -9,16 +9,20 @@ import UIKit
 
 final class OptionsTextFieldView: UIView {
     
-    let informationTextField: UITextField = {
+    private let informationTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = .white
         textField.layer.cornerRadius = 20
         textField.textColor = .black
+        textField.keyboardType = .numberPad
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
     
-    
+    var text: String? {
+        informationTextField.text
+    }
+
     init(text: String) {
         super.init(frame: .zero)
         informationTextField.placeholder = text
@@ -42,7 +46,8 @@ private extension OptionsTextFieldView {
             informationTextField.topAnchor.constraint(equalTo: topAnchor),
             informationTextField.bottomAnchor.constraint(equalTo: bottomAnchor),
             informationTextField.leadingAnchor.constraint(equalTo: leadingAnchor),
-            informationTextField.trailingAnchor.constraint(equalTo: trailingAnchor)
+            informationTextField.trailingAnchor.constraint(equalTo: trailingAnchor),
+            informationTextField.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
 }
