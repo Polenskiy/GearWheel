@@ -10,6 +10,8 @@ import CoreGraphics
 enum GeometryError {
     case height(from: Int, to: Int)
     case radius(less: Int)
+    case radiusZero(enter: Int)
+    case count(less: Int)
 }
 
 protocol GearViewDelegate: AnyObject {
@@ -32,8 +34,6 @@ final class GearView: UIView {
     }
     
     override func draw(_ rect: CGRect) {
-        
-        guard toothCount > 2, toothRadius >= 0 else { return }
 
         guard let context = UIGraphicsGetCurrentContext() else { return }
         
@@ -42,6 +42,16 @@ final class GearView: UIView {
         let angleStep = CGFloat.pi * 2 / CGFloat(toothCount)
         let minRadius = outerRadius * cos(angleStep / 2.0)
         let innerRadius = outerRadius - toothHeight
+        
+        guard toothRadius >= 0 else {
+            delegate?.handle(error: .radiusZero(enter: Int(toothRadius)))
+            return
+        }
+        
+        guard toothCount > 2, toothCount < 100 else {
+            delegate?.handle(error: .count(less: Int(toothCount)))
+            return
+        }
 
         guard toothHeight > outerRadius - minRadius, toothHeight < outerRadius  else {
             delegate?.handle(error: .height(from: Int(outerRadius - minRadius), to: Int(outerRadius)))
@@ -61,49 +71,46 @@ final class GearView: UIView {
             let endAngle = startAngle + angleStep
 
             let outerPoint = pointOnCircle(center: center, radius: outerRadius, angle: startAngle)
-            let innerPoint = pointOnCircle(center: center, radius: outerRadius - toothHeight, angle: middleAngle)
+            let innerPoint = pointOnCircle(center: center, radius: innerRadius, angle: middleAngle)
 
             if shouldSaveOnce {
                 lastOuterPoint = outerPoint
                 lastInnerPoint = innerPoint
                 shouldSaveOnce = false
             }
-            let endPoint = pointOnCircle(center: center, radius: outerRadius, angle: endAngle)
             
-            //Расчет точки из которой будет начинаться дуга во впадине
+            let endPoint = pointOnCircle(center: center, radius: outerRadius, angle: endAngle)
         
-            // Разбиваем выражение на несколько шагов
             let innerRadiusSquared = pow(innerRadius, 2)
             let outerRadiusSquared = pow(outerRadius, 2)
             
-            let newLine = sqrt(innerRadiusSquared + outerRadiusSquared - 2 * innerRadius * outerRadius * cos(angleStep / 2))
+            let line = sqrt(innerRadiusSquared + outerRadiusSquared - 2 * innerRadius * outerRadius * cos(angleStep / 2))
 
-            let numerator = innerRadiusSquared + pow(newLine, 2) - outerRadiusSquared
-            let denominator = 2 * innerRadius * newLine
+            let numerator = innerRadiusSquared + pow(line, 2) - outerRadiusSquared
+            let denominator = 2 * innerRadius * line
 
-            // Теперь вычисляем угол
             let alfaAngle = acos(numerator / denominator)
             
             let queAngle = CGFloat.pi - alfaAngle
             let tettaAngle = CGFloat.pi * 2 - ((CGFloat.pi / 2) + queAngle)
+            
             let innerCatet = toothRadius * tan(tettaAngle)
             
-            //Расчет точки из которой будет начинаться дуга на вершине зуба
             let bettaAngle = CGFloat.pi * 2 - ((angleStep / 2) + (alfaAngle))
-            let newOuterHypotenuse = abs(toothRadius / sin(bettaAngle))
-            guard newOuterHypotenuse <= newLine / 2 else {
-                delegate?.handle(error: .radius(less: 10))
+            let outerHypotenuse = abs(toothRadius / sin(bettaAngle))
+
+            guard (innerCatet + outerHypotenuse) < line else {
+                delegate?.handle(error: .radius(less: Int(toothRadius)))
                 return
             }
-
-            let tangentPoint1 = pointOnLine(from: outerPoint, towards: innerPoint, distance: newOuterHypotenuse)
+            
             if let lastTangentPoint {
                 context.addArc(tangent1End: lastTangentPoint, tangent2End: outerPoint, radius: toothRadius)
             } else {
                 context.move(to: outerPoint)
             }
 
-            let tangentPoint4 = pointOnLine(from: endPoint, towards: innerPoint, distance: newOuterHypotenuse)
+            let tangentPoint4 = pointOnLine(from: endPoint, towards: innerPoint, distance: outerHypotenuse)
 
             context.addArc(tangent1End: outerPoint, tangent2End: innerPoint, radius: toothRadius)
             context.addArc(tangent1End: innerPoint, tangent2End: endPoint, radius: toothRadius)
@@ -129,14 +136,9 @@ final class GearView: UIView {
         return sqrt(dx * dx + dy * dy)
     }
 
-    // Функция для нахождения гипотенузы, если известен противолежащий катет
-    func hypotenuseFromOpposite(opposite: Double, angleRadians: Double) -> Double {
-        opposite / sin(angleRadians)
-    }
-
     func pointOnLine(from pointA: CGPoint, towards pointC: CGPoint, distance d: CGFloat) -> CGPoint {
         let totalDistance = distanceBetweenPoints(pointA, pointC)
-        if totalDistance == 0 { return pointA }  // Исключаем деление на ноль
+        if totalDistance == 0 { return pointA }
         let dx = (pointC.x - pointA.x) / totalDistance
         let dy = (pointC.y - pointA.y) / totalDistance
         return CGPoint(x: pointA.x + d * dx, y: pointA.y + d * dy)

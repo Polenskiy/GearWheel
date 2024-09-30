@@ -47,11 +47,8 @@ private extension OptionsViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
 
-        // Создаем UITapGestureRecognizer
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        // Не блокируем другие тапы (например, на кнопки)
         tapGesture.cancelsTouchesInView = false
-        // Добавляем жест в view
         view.addGestureRecognizer(tapGesture)
     }
 

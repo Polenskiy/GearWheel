@@ -42,7 +42,11 @@ extension GearViewController: GearViewDelegate {
         case .height(from: let from, to: let to):
             errorLabel.text = "Высота должна быть больше: \(from) и меньше: \(to)"
         case .radius(less: let value):
-            errorLabel.text = "Радиус должен быть меньше \(value)"
+            errorLabel.text = "Радиус должен быть больше 0 и меньше \(value)"
+        case .count(less: let value):
+            errorLabel.text = "Количество зубьев должно быть больше 2 и меньше 100. Вы ввели \(value)"
+        case .radiusZero(enter: let value):
+            errorLabel.text = "Радиус должен быть больше 0. Вы ввели \(value)"
         }
     }
 }
